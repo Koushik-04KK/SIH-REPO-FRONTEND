@@ -10,6 +10,14 @@ export default {
         raleway: ['Raleway', 'sans-serif'],
         urbanist: ['Urbanist', 'sans-serif'],
       },
+      fill: {
+        red: '#dc2626', // Tailwind's red-600
+        teal: '#0d9488', // Tailwind's teal-600
+      },
+      stroke: {
+        red: '#dc2626',
+        teal: '#0d9488',
+      },
       colors: {
         customColor: {
           base: '#3ca4ac',     // Base color
@@ -24,8 +32,8 @@ export default {
       },
     },
     plugins: [
-      require('tailwind-scrollbar')({ nocompatible: true }),
-   ],
+      require('tailwind-scrollbar')({ nocompatible: true}),
+      ],
 },
 }
 

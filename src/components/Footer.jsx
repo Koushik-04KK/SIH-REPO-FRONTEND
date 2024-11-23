@@ -41,7 +41,7 @@ const Footer = () => {
         <img
           src={footerimg}
           alt="Footer Image"
-          className="w-[250px] md:w-[450px] mt-2 hidden md:block"
+          className="w-[250px] md:w-[450px] mt-4 hidden md:block"
         />
       </div>
     </div>
