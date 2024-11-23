@@ -8,6 +8,11 @@
   font-family: "Poppins", sans-serif;
 }
 
+/* Enable smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px; /* Adjust width */
@@ -24,5 +29,5 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3ca4ac; /* Hover color */
+  background: #3ca4ac; /* Hover color */
 }

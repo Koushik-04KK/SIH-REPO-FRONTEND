@@ -15,8 +15,15 @@ import predictionicon from '../assets/material-symbols_online-prediction.svg';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const RULPrediction = () => {
-  const [rulReadings, setRulReadings] = useState([]);
-  const [estimatedRUL, setEstimatedRUL] = useState(0);
+  const [rulReadings, setRulReadings] = useState(() => {
+    const savedReadings = localStorage.getItem('rulReadings');
+    return savedReadings ? JSON.parse(savedReadings) : [];
+  });
+
+  const [estimatedRUL, setEstimatedRUL] = useState(() => {
+    const savedRUL = localStorage.getItem('estimatedRUL');
+    return savedRUL ? JSON.parse(savedRUL) : 0;
+  });
 
   // Generate random RUL readings dynamically
   useEffect(() => {
@@ -25,15 +32,36 @@ const RULPrediction = () => {
         const newValue = Math.floor(Math.random() * 28) + 3; // Random value between 3 and 30
         const updatedReadings = [...prev, newValue];
         const last5Readings = updatedReadings.slice(-5);
-        setEstimatedRUL(
-          last5Readings.reduce((sum, val) => sum + val, 0) / last5Readings.length
-        );
+        const newEstimatedRUL =
+          last5Readings.reduce((sum, val) => sum + val, 0) / last5Readings.length;
+
+        setEstimatedRUL(newEstimatedRUL);
+
+        // Save updated readings and estimated RUL to localStorage
+        localStorage.setItem('rulReadings', JSON.stringify(updatedReadings));
+        localStorage.setItem('estimatedRUL', JSON.stringify(newEstimatedRUL));
+
         return updatedReadings;
       });
     };
 
     const interval = setInterval(updateRUL, 2000); // Update every 2 seconds
     return () => clearInterval(interval);
+  }, []);
+
+  // Reset readings and prediction when user logs out or reloads
+  useEffect(() => {
+    const handleStorageReset = () => {
+      localStorage.removeItem('rulReadings');
+      localStorage.removeItem('estimatedRUL');
+    };
+
+    // Listen for manual reloads or specific reset actions (e.g., logout)
+    window.addEventListener('beforeunload', handleStorageReset);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleStorageReset);
+    };
   }, []);
 
   const data = {
@@ -127,26 +155,24 @@ const RULPrediction = () => {
           </button>
         </div>
         <div className="fixed bottom-0 left-0 w-full bg-white shadow-lg z-50 md:hidden">
-          <div className="flex justify-between">
-            <button
-              className="w-1/2 bg-[#387A79] text-white py-3 text-center hover:bg-teal-600 rounded-none"
-            >
-              Start
-            </button>
-            <button
-              className="w-1/2 bg-[#BE4848] text-white py-3 text-center hover:bg-red-600 rounded-none"
-            >
-              Stop
-            </button>
+            <div className="flex justify-between">
+              <button
+                className="w-1/2 bg-[#387A79] text-white py-3 text-center hover:bg-teal-600 rounded-none"
+              >
+                Start
+              </button>
+              <button
+                className="w-1/2 bg-[#BE4848] text-white py-3 text-center hover:bg-red-600 rounded-none"
+              >
+                Stop
+              </button>
+            </div>
           </div>
-        </div>
         {/* Grid Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 lg:gap-x-6">
           {/* Left Card */}
           <div
-            className="
-              bg-white rounded-3xl shadow-lg p-4 md:p-6
-              col-span-1 md:col-span-2"
+            className="bg-white rounded-3xl shadow-lg p-4 md:p-6 col-span-1 md:col-span-2"
           >
             <div className="flex justify-between items-center">
               <h2 className="text-base md:text-lg font-normal text-gray-700">
