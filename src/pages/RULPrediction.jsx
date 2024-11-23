@@ -31,9 +31,8 @@ const RULPrediction = () => {
       setRulReadings((prev) => {
         const newValue = Math.floor(Math.random() * 28) + 3; // Random value between 3 and 30
         const updatedReadings = [...prev, newValue];
-        const last5Readings = updatedReadings.slice(-5);
         const newEstimatedRUL =
-          last5Readings.reduce((sum, val) => sum + val, 0) / last5Readings.length;
+        updatedReadings.reduce((sum, val) => sum + val, 0) / updatedReadings.length;
 
         setEstimatedRUL(newEstimatedRUL);
 
